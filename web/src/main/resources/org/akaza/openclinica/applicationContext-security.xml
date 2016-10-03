@@ -11,46 +11,50 @@
                            http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
 
-    <security:http entry-point-ref="authenticationProcessingFilterEntryPoint" use-expressions="true">
+  <security:http entry-point-ref="authenticationProcessingFilterEntryPoint" use-expressions="true">
 
-        <security:anonymous />
-        <security:intercept-url pattern="/pages/login/login" access="permitAll"/>
-        <security:intercept-url pattern="/pages/restricted/secret" access="permitAll"/>
-        <security:intercept-url pattern="/SystemStatus" access="permitAll"/>
-        <security:intercept-url pattern="/RssReader" access="permitAll"/>
-        <security:intercept-url pattern="/RequestPassword" access="permitAll"/>
-        <security:intercept-url pattern="/RequestAccount" access="permitAll"/>
-        <security:intercept-url pattern="/includes/**" access="permitAll"/>
-        <security:intercept-url pattern="/images/**" access="permitAll"/>
-        <security:intercept-url pattern="/help/**" access="permitAll"/>
-        <security:intercept-url pattern="/ws/**" access="permitAll"/>
-        <security:intercept-url pattern="/Contact" access="permitAll"/>
-        <security:intercept-url pattern="/rest2/openrosa/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/odmk/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/openrosa/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/accounts/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/itemdata/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/auth/api/v1/studies/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/odmss/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/healthcheck/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/api/v1/anonymousform/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/api/v2/anonymousform/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/api/v1/editform/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/auth/api/v1/discrepancynote/**" access="permitAll"/>
-        <security:intercept-url pattern="/pages/auth/api/**" access="permitAll"/>
-        <!--
-        <security:form-login login-page="/pages/login/login" authentication-failure-url="/pages/login/login?action=errorLogin"
-          default-target-url='/MainMenu' always-use-default-target='true' />
-         -->
-        <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
-        <security:custom-filter position="FORM_LOGIN_FILTER" ref="myFilter" />
-        <!--  <security:custom-filter position="LOGOUT_FILTER" ref="logoutFilter" /> -->
-        <security:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
-        <security:session-management session-authentication-strategy-ref="sas"/>
-        <security:logout logout-success-url="/MainMenu" logout-url="/j_spring_security_logout" />
-        <security:access-denied-handler error-page="/accounts/denied.htm"/>
-        <security:csrf disabled="true"/>
-    </security:http>
+    <security:anonymous />
+    <security:intercept-url pattern="/pages/login/login" filters="none"/>
+    <security:intercept-url pattern="/SystemStatus" filters="none"/>
+    <security:intercept-url pattern="/RssReader" filters="none"/>
+    <security:intercept-url pattern="/RequestPassword" filters="none"/>
+    <security:intercept-url pattern="/RequestAccount" filters="none"/>
+    <security:intercept-url pattern="/includes/**" filters="none"/>
+    <security:intercept-url pattern="/images/**" filters="none"/>
+    <security:intercept-url pattern="/help/**" filters="none"/>
+    <security:intercept-url pattern="/ws/**" filters="none"/>
+    <security:intercept-url pattern="/Contact" filters="none"/>
+    <security:intercept-url pattern="/rest2/openrosa/**" filters="none"/>
+    <security:intercept-url pattern="/pages/odmk/**" filters="none"/>
+    <security:intercept-url pattern="/pages/openrosa/**" filters="none"/>
+    <security:intercept-url pattern="/pages/accounts/**" filters="none"/>
+    <security:intercept-url pattern="/pages/itemdata/**" filters="none"/>
+    <security:intercept-url pattern="/pages/auth/api/v1/studies/**" filters="none"/>
+    <security:intercept-url pattern="/pages/odmss/**" filters="none"/>
+    <security:intercept-url pattern="/pages/healthcheck/**" filters="none"/>
+    <security:intercept-url pattern="/pages/api/v1/anonymousform/**" filters="none"/>
+    <security:intercept-url pattern="/pages/api/v2/anonymousform/**" filters="none"/>
+    <security:intercept-url pattern="/pages/api/v1/editform/**" filters="none"/>
+    <security:intercept-url pattern="/pages/auth/api/v1/discrepancynote/**" filters="none"/>
+
+    <security:intercept-url pattern="/pages/personSubject/**" filters="none"/>
+    <security:intercept-url pattern="/pages/studyEvent/**" filters="none"/>
+
+    <security:intercept-url pattern="/pages/auth/api/**" filters="none"/>
+    <!--
+    <security:form-login login-page="/pages/login/login" authentication-failure-url="/pages/login/login?action=errorLogin"
+      default-target-url='/MainMenu' always-use-default-target='true' />
+     -->
+    <security:intercept-url pattern="/**" access="ROLE_USER" />
+    <security:custom-filter position="FORM_LOGIN_FILTER" ref="myFilter" />
+    <!--  <security:custom-filter position="LOGOUT_FILTER" ref="logoutFilter" /> -->
+    <security:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
+    <security:session-management session-authentication-strategy-ref="sas"/>
+    <security:logout logout-success-url="/MainMenu" logout-url="/j_spring_security_logout" />
+    
+  </security:http>  
+ 
+>>>>>>> 8f37393... Ficheros de configuración de los WS
 
     <bean id="authenticationProcessingFilterEntryPoint"
           class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
@@ -179,6 +183,14 @@
     </bean>
 
     <bean id="openRosaSubmissionController" class="org.akaza.openclinica.controller.openrosa.OpenRosaSubmissionController" autowire="byName">
+    </bean>
+
+    <bean id="personSubjectResource" class="org.akaza.openclinica.web.restful_ssib.PersonSubjectResource">
+        <property name="studySubjectDao" ref="studySubjectDaoDomain"/>
+    </bean>
+
+    <bean id="studySubjectEventResource" class="org.akaza.openclinica.web.restful_ssib.StudySubjectEventResource">
+        <property name="studyEventDao" ref="studyEventDaoDomain"/>
     </bean>
 
 
