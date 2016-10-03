@@ -15,8 +15,8 @@
                            http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
 
-  <security:http access-denied-page="/accounts/denied.htm" entry-point-ref="authenticationProcessingFilterEntryPoint">
-    
+  <security:http entry-point-ref="authenticationProcessingFilterEntryPoint" use-expressions="true">
+
     <security:anonymous />
     <security:intercept-url pattern="/pages/login/login" filters="none"/>
     <security:intercept-url pattern="/SystemStatus" filters="none"/>
@@ -40,14 +40,13 @@
     <security:intercept-url pattern="/pages/api/v2/anonymousform/**" filters="none"/>
     <security:intercept-url pattern="/pages/api/v1/editform/**" filters="none"/>
     <security:intercept-url pattern="/pages/auth/api/v1/discrepancynote/**" filters="none"/>
+
+    <security:intercept-url pattern="/pages/personSubject/**" filters="none"/>
+    <security:intercept-url pattern="/pages/studyEvent/**" filters="none"/>
+
     <security:intercept-url pattern="/pages/auth/api/**" filters="none"/>
-    <!--
-    <security:form-login login-page="/pages/login/login" authentication-failure-url="/pages/login/login?action=errorLogin"
-      default-target-url='/MainMenu' always-use-default-target='true' />
-     -->
     <security:intercept-url pattern="/**" access="ROLE_USER" />
     <security:custom-filter position="FORM_LOGIN_FILTER" ref="myFilter" />
-    <!--  <security:custom-filter position="LOGOUT_FILTER" ref="logoutFilter" /> -->
     <security:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
     <security:session-management session-authentication-strategy-ref="sas"/>
     <security:logout logout-success-url="/MainMenu" logout-url="/j_spring_security_logout" />
@@ -168,6 +167,14 @@
 
 <bean id="openRosaSubmissionController" class="org.akaza.openclinica.controller.openrosa.OpenRosaSubmissionController" autowire="byName">
 </bean>
+
+    <bean id="personSubjectResource" class="org.akaza.openclinica.web.restful_ssib.PersonSubjectResource">
+        <property name="studySubjectDao" ref="studySubjectDaoDomain"/>
+    </bean>
+
+    <bean id="studySubjectEventResource" class="org.akaza.openclinica.web.restful_ssib.StudySubjectEventResource">
+        <property name="studyEventDao" ref="studyEventDaoDomain"/>
+    </bean>
 
 
 </beans>
