@@ -15,7 +15,7 @@
                            http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
 
-  <security:http entry-point-ref="authenticationProcessingFilterEntryPoint" use-expressions="true">
+  <security:http access-denied-page="/accounts/denied.htm" entry-point-ref="authenticationProcessingFilterEntryPoint">
 
     <security:anonymous />
     <security:intercept-url pattern="/pages/login/login" filters="none"/>
