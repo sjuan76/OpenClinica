@@ -1339,6 +1339,13 @@
         <display-name>OpenRosaFormDownloadServlet</display-name>
         <servlet-class>org.akaza.openclinica.web.openrosa.OpenRosaFormDownloadServlet</servlet-class>
     </servlet>
+
+    <servlet>
+        <servlet-name>ObtenerEventosServlet</servlet-name>
+        <display-name>ObtenerEventos</display-name>
+        <servlet-class>org.akaza.openclinica.control.ssib.FindPendingEvents</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>OpenRosaFormDownloadServlet</servlet-name>
         <url-pattern>/openrosa/formXml</url-pattern>
@@ -2188,6 +2195,10 @@
         <url-pattern>/UploadFile</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>ObtenerEventosServlet</servlet-name>
+        <url-pattern>/ObtenerEventos</url-pattern>
+    </servlet-mapping>
     <!-- just for testing purposes -->
     <servlet-mapping>
         <servlet-name>ManageStudyServlet</servlet-name>
