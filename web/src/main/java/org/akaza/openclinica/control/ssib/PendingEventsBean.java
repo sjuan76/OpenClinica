@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.akaza.openclinica.web.restful_ssib.dto.StudyEventDto;
+
 public class PendingEventsBean
 	implements Serializable {
 
@@ -11,17 +13,21 @@ public class PendingEventsBean
 
 	private List<Protocolo> protocolos;
 	private List<Persona> personas;
+	private List<StudyEventDto> eventos;
 
 	public PendingEventsBean() {
 		this.protocolos =
 			new ArrayList<>();
 		this.personas =
 			new ArrayList<>();
+		this.eventos =
+			new ArrayList<>();
 	}
 
 	public PendingEventsBean(
 		List<Protocolo> protocolos,
-		List<Persona> personas) {
+		List<Persona> personas,
+		List<StudyEventDto> eventos) {
 
 		this();
 		if (protocolos != null) {
@@ -37,6 +43,13 @@ public class PendingEventsBean
 				addAll(
 					personas);
 		}
+
+		if (eventos != null) {
+			this.
+				eventos.
+				addAll(
+					eventos);
+		}
 	}
 
 	public List<Protocolo> getProtocolos() {
@@ -47,5 +60,10 @@ public class PendingEventsBean
 	public List<Persona> getPersonas() {
 		return
 			this.personas;
+	}
+
+	public List<StudyEventDto> getEventos() {
+		return
+			this.eventos;
 	}
 } 

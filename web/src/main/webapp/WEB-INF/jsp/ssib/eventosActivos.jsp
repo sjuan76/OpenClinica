@@ -87,7 +87,7 @@
 
 <select name='idPersona'>
     <c:forEach items="${pendingEvents.personas}" var="_persona">
-	<option value="${_persona.id}">${_persona.uid}</option>
+	<option value="${_persona.uid}">${_persona.uid}</option>
     </c:forEach>
 </select>
 
@@ -95,6 +95,31 @@ Fecha: <input type="text" name="fecha"/>
 
 <input type="submit" value="Guardar"/>
 </form>
+
+<table border="1">
+    <c:forEach items="${pendingEvents.eventos}" var="_evento">
+        <tr>
+            <td>
+		${_evento.studyEventId}
+            </td>
+            <td>
+		${_evento.startDate}
+            </td>
+            <td>
+		${_evento.eventDefinitionCRFId}
+            </td>
+            <td>
+		${_evento.subjectId}
+            </td>
+            <td>
+		${_evento.statusId}
+            </td>
+            <td>
+		${_evento.eventName}
+            </td>
+        </tr>
+    </c:forEach>
+</table>
 <br>
 <jsp:include page="../include/footer.jsp"/>
 

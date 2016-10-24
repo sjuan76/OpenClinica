@@ -44,7 +44,7 @@ public class FindPendingEvents extends SecureController {
 
 	private static final SimpleDateFormat SDF_OUTPUT =
 		new SimpleDateFormat(
-			"ddMMyyyyHHmmss");
+			"yyyyMMddHHmmss");
 
 	private WebApplicationContext springContext;
 
@@ -158,27 +158,21 @@ public class FindPendingEvents extends SecureController {
 					subjectDao.
 					findAll();
 			for(Subject subject : subjects) {
-				if (subject.getUniqueIdentifier() != null) {
+				String subjectUid =
+					subject.
+						getUniqueIdentifier();
+				if ((subjectUid != null) && !subjectUid.trim().isEmpty()) {
 					Persona persona =
 						new Persona(
 							subject.
 								getSubjectId(),
-							subject.
-								getUniqueIdentifier());
+							subjectUid);
 					personas.
 						add(
 							persona);
 				}
 			}
 
-			PendingEventsBean pendingEventsBean =
-				new PendingEventsBean(
-					protocolos,
-					personas);
-			request.
-				setAttribute(
-					"pendingEvents",
-					pendingEventsBean);
 			String idPersona =
 				request.
 					getParameter(
@@ -200,7 +194,15 @@ public class FindPendingEvents extends SecureController {
 					"SJM: personSubjectResource es "
 						+ personSubjectResource);
 
+			List<StudyEventDto> eventos =
+				new ArrayList<>();
+
 			if ((idPersona != null) && (idProtocolo != null) && (fecha != null)) {
+				this.
+					logger.
+					warn(
+						"SJM: Buscando sujetos con UID "
+							+ idPersona);
 				List<StudySubjectDto> sujetos =
 					new ArrayList<>(
 						this.
@@ -213,6 +215,13 @@ public class FindPendingEvents extends SecureController {
 						parseInt(
 							idProtocolo);
 
+				this.
+					logger.
+					warn(
+						"SJM: El tamaño de StudySubjectDto es "
+							+ sujetos.size());
+
+
 				StudySubjectDto sujetoBuscado = null;
 				for (StudySubjectDto sujeto : sujetos) {
 					if (sujeto.getStudyId() == protocolIntId) {
@@ -221,27 +230,52 @@ public class FindPendingEvents extends SecureController {
 					}
 				}
 
+				this.
+					logger.
+					warn(
+						"SJM: El sujetoBuscado es "
+							+ (sujetoBuscado == null ? "null" : Integer.toString(sujetoBuscado.getStudySubjectId())));
+
 				Date date =
 					SDF_INPUT.
 						parse(
 							fecha);
+				
+				if (sujetoBuscado != null) {
+					eventos.
+						addAll(
+							this.
+								studySubjectEventResource.
+								getOpenEventsBySubjectAndDate(
+									sujetoBuscado.
+										getStudySubjectId(),
+									SDF_OUTPUT.
+										format(date)
+										+ "000000").
+								getBody());
+				}
 
-				List<StudyEventDto> eventos =
-					new ArrayList<>(
-					this.
-						studySubjectEventResource.
-						getOpenEventsBySubjectAndDate(
-							protocolIntId,
-							SDF_OUTPUT.
-								format(date)
-								+ "000000").
-						getBody());
+				this.
+					logger.
+					warn(
+						"SJM: Número de eventos "
+							+ eventos.size());
 
 				request.
 					setAttribute(
 						"eventos",
 						eventos);
 			}
+
+			PendingEventsBean pendingEventsBean =
+				new PendingEventsBean(
+					protocolos,
+					personas,
+					eventos);
+			request.
+				setAttribute(
+					"pendingEvents",
+					pendingEventsBean);
 
 			forwardPage(
 				Page.SSIB_EVENTOS_ABIERTOS);
@@ -254,6 +288,4 @@ public class FindPendingEvents extends SecureController {
 			throw e;
 		}
 	}
-
 }
-
