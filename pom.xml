@@ -584,6 +584,19 @@
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
 		</repository>
+<!--
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<id>local-id</id>
+			<name>local-repo</name>
+			<url>C:/Users/s004256/.m2/repository</url>
+		</repository>
+-->
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>

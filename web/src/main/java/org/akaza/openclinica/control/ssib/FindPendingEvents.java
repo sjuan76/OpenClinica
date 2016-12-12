@@ -27,7 +27,8 @@ import javax.servlet.ServletException;
 /**
  * Created by S004256 on 04/10/2016.
  */
-public class FindPendingEvents extends SecureController {
+public class FindPendingEvents
+	extends SecureController {
 
 	@Autowired
 	private PersonSubjectResource personSubjectResource;

@@ -98,6 +98,7 @@
 <div style="width: 550px">
 <div class="box_T"><div class="box_L"><div class="box_R"><div class="box_B"><div class="box_TL"><div class="box_TR"><div class="box_BL"><div class="box_BR">
 
+
 <div class="textbox_center">
 <table border="0" cellpadding="5">
 	<tr valign="top">
@@ -112,11 +113,32 @@
 					  <input type="hidden" name="label" value="<c:out value="${label}"/>">
 					 </c:when>
 					 <c:otherwise>
-					   <input onfocus="this.select()" type="text" name="label" value="<c:out value="${label}"/>" size="50" class="formfieldXL">
+<script>
+    function getAdministrativeData() {
+        alert("Función llamada");
+        var studySubjectId = document.getElementById("studySubjectIdField").value;
+        alert("Study Subject ID " + studySubjectId);
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState == XMLHttprequest.DONE) {
+                alert("status es " + xmlHttp.status);
+                alert("response text es " + xmlHttp.responeText);
+            }
+        };
+        alert("Vamos a abrir");
+        xmlHttp.open("GET", "/ssibAdministrativeData/json/view/cipAut/" + studySubjectId, true)
+        alert("Vamos a enviar");
+        xmlHttp.send();
+        alert("Enviado");
+    }
+</script>
+					   <input id="studySubjectIdField" onfocus="this.select()" type="text" name="label" value="<c:out value="${label}"/>" size="50" class="formfieldXL">
+    					<td>*
+	    				    <input type="button" value="Validar" onclick="getAdministrativeData()"/>
+		    			</td>
 					 </c:otherwise>
 					</c:choose>
 					</div></td>
-					<td>*</td>
 				</tr>
 				<tr>
 					<td colspan="2"><jsp:include page="../showMessage.jsp"><jsp:param name="key" value="label"/></jsp:include></td>
@@ -124,6 +146,7 @@
 			</table>
 		</td>
 	</tr>
+
 	<c:choose>
 	<c:when test="${study.studyParameterConfig.subjectPersonIdRequired =='required'}">
 	<tr valign="top">
@@ -134,9 +157,12 @@
 					<td valign="top"><div class="formfieldXL_BG">
 						<input onfocus="this.select()" type="text" name="uniqueIdentifier" value="<c:out value="${uniqueIdentifier}"/>" size="50" class="formfieldXL">
 					</div></td>
-					<td>* <c:if test="${study.studyParameterConfig.discrepancyManagement=='true'}"><a href="#" onClick="openDSNoteWindow('CreateDiscrepancyNote?name=subject&field=uniqueIdentifier&column=unique_identifier','spanAlert-uniqueIdentifier'); return false;">
-					<img name="flag_uniqueIdentifier" src="images/icon_noNote.gif" border="0" alt="<fmt:message key="discrepancy_note" bundle="${resword}"/>" title="<fmt:message key="discrepancy_note" bundle="${resword}"/>"></a></c:if></td>
-				</tr>
+					<td>*
+					    <c:if test="${study.studyParameterConfig.discrepancyManagement=='true'}"><a href="#" onClick="openDSNoteWindow('CreateDiscrepancyNote?name=subject&field=uniqueIdentifier&column=unique_identifier','spanAlert-uniqueIdentifier'); return false;">
+					        <img name="flag_uniqueIdentifier" src="images/icon_noNote.gif" border="0" alt="<fmt:message key="discrepancy_note" bundle="${resword}"/>" title="<fmt:message key="discrepancy_note" bundle="${resword}"/>"></a>
+					    </c:if>
+				    </td>
+			    </tr>
 				<tr>
 					<td colspan="2"><jsp:include page="../showMessage.jsp"><jsp:param name="key" value="uniqueIdentifier"/></jsp:include></td>
 				</tr>
