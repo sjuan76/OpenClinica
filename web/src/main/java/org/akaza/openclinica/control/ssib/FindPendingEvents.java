@@ -12,6 +12,7 @@ import org.akaza.openclinica.view.Page;
 import org.akaza.openclinica.web.InsufficientPermissionException;
 import org.akaza.openclinica.web.restful_ssib.PersonSubjectResource;
 import org.akaza.openclinica.web.restful_ssib.StudySubjectEventResource;
+import org.akaza.openclinica.web.restful_ssib.StudySubjectResource;
 import org.akaza.openclinica.web.restful_ssib.dto.StudyEventDto;
 import org.akaza.openclinica.web.restful_ssib.dto.StudySubjectDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class FindPendingEvents extends SecureController {
 
 	@Autowired
 	private StudySubjectEventResource studySubjectEventResource;
+
+	@Autowired
+	private StudySubjectResource studySubjectResource;
 
 	@Autowired
 	private SubjectDao subjectDao;
@@ -194,78 +198,13 @@ public class FindPendingEvents extends SecureController {
 					"SJM: personSubjectResource es "
 						+ personSubjectResource);
 
+
 			List<StudyEventDto> eventos =
-				new ArrayList<>();
-
-			if ((idPersona != null) && (idProtocolo != null) && (fecha != null)) {
 				this.
-					logger.
-					warn(
-						"SJM: Buscando sujetos con UID "
-							+ idPersona);
-				List<StudySubjectDto> sujetos =
-					new ArrayList<>(
-						this.
-							personSubjectResource.
-							getPersonByUID(
-								idPersona).getBody());
-
-				int protocolIntId =
-					Integer.
-						parseInt(
-							idProtocolo);
-
-				this.
-					logger.
-					warn(
-						"SJM: El tamaño de StudySubjectDto es "
-							+ sujetos.size());
-
-
-				StudySubjectDto sujetoBuscado = null;
-				for (StudySubjectDto sujeto : sujetos) {
-					if (sujeto.getStudyId() == protocolIntId) {
-						sujetoBuscado =
-							sujeto;
-					}
-				}
-
-				this.
-					logger.
-					warn(
-						"SJM: El sujetoBuscado es "
-							+ (sujetoBuscado == null ? "null" : Integer.toString(sujetoBuscado.getStudySubjectId())));
-
-				Date date =
-					SDF_INPUT.
-						parse(
-							fecha);
-				
-				if (sujetoBuscado != null) {
-					eventos.
-						addAll(
-							this.
-								studySubjectEventResource.
-								getOpenEventsBySubjectAndDate(
-									sujetoBuscado.
-										getStudySubjectId(),
-									SDF_OUTPUT.
-										format(date)
-										+ "000000").
-								getBody());
-				}
-
-				this.
-					logger.
-					warn(
-						"SJM: Número de eventos "
-							+ eventos.size());
-
-				request.
-					setAttribute(
-						"eventos",
-						eventos);
-			}
+					getEventos(
+						fecha,
+						idPersona,
+						idProtocolo);
 
 			PendingEventsBean pendingEventsBean =
 				new PendingEventsBean(
@@ -287,5 +226,109 @@ public class FindPendingEvents extends SecureController {
 					e);
 			throw e;
 		}
+	}
+
+	private List<StudyEventDto> getEventos(
+		String fecha,
+		String idPersona,
+		String idProtocolo) 
+			throws Exception {
+
+		List<StudyEventDto> eventos =
+			new ArrayList<>();
+
+		if ((idProtocolo == null) || idProtocolo.trim().isEmpty()) {
+			return null;
+		}
+
+		List<StudySubjectDto> sujetosBuscados =
+			new ArrayList<>();
+
+		int protocolIntId =
+			Integer.
+				parseInt(
+					idProtocolo);
+		if (idPersona != null) {
+			this.
+				logger.
+				warn(
+					"SJM: Buscando sujetos con UID "
+						+ idPersona);
+			List<StudySubjectDto> sujetos =
+				new ArrayList<>(
+					this.
+						personSubjectResource.
+						getPersonByUID(
+							idPersona).getBody());
+
+
+			this.
+				logger.
+				warn(
+					"SJM: El tamaño de StudySubjectDto es "
+						+ sujetos.size());
+
+			StudySubjectDto sujetoBuscado =
+				null;
+			for (StudySubjectDto sujeto : sujetos) {
+				if (sujeto.getStudyId() == protocolIntId) {
+					sujetoBuscado =
+						sujeto;
+				}
+			}
+
+			// TODO: Error si no se encuentra el sujeto???
+			this.
+				logger.
+				warn(
+					"SJM: El sujetoBuscado es "
+						+ (sujetoBuscado == null ? "null" : Integer.toString(sujetoBuscado.getStudySubjectId())));
+		} else {
+			this.
+				logger.
+				warn(
+					"SJM: Buscando sujetos de estudio "
+						+ idProtocolo);
+			sujetosBuscados.
+				addAll(
+					this.
+						studySubjectResource.
+						getStudySubjects(
+							protocolIntId));
+		}
+
+		Date date;
+		if ((fecha != null) && !fecha.trim().isEmpty()) {
+			date =
+				SDF_INPUT.
+					parse(
+						fecha);
+		} else {
+			date =
+				new Date();
+		}
+
+		for (StudySubjectDto sujetoBuscado : sujetosBuscados) {
+			eventos.
+				addAll(
+					this.
+						studySubjectEventResource.
+						getOpenEventsBySubjectAndDate(
+							sujetoBuscado.
+								getStudySubjectId(),
+							SDF_OUTPUT.
+								format(date)
+								+ "000000"
+						));
+		}
+
+		this.
+			logger.
+			warn(
+				"SJM: Número de eventos "
+					+ eventos.size());
+
+		return
+			eventos;
 	}
 }

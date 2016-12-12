@@ -172,9 +172,11 @@
         <property name="studySubjectDao" ref="studySubjectDaoDomain"/>
     </bean>
 
+    <bean id="studySubjectResource" class="org.akaza.openclinica.web.restful_ssib.StudySubjectResource">
+        <property name="studySubjectDao" ref="studySubjectDaoDomain"/>
+    </bean>
+
     <bean id="studySubjectEventResource" class="org.akaza.openclinica.web.restful_ssib.StudySubjectEventResource">
         <property name="studyEventDao" ref="studyEventDaoDomain"/>
     </bean>
-
-
 </beans>

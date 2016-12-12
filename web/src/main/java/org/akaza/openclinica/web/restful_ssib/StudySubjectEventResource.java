@@ -73,9 +73,35 @@ public class StudySubjectEventResource {
 	@RequestMapping(
 		value = "/json/view/{studySubjectId}/{date}",
 		method = RequestMethod.GET)
-	public ResponseEntity<Collection<StudyEventDto>> getOpenEventsBySubjectAndDate(
+	public ResponseEntity<Collection<StudyEventDto>> getOpenEventsBySubjectAndDateJson(
 		@PathVariable("studySubjectId") int studySubjectID,
 		@PathVariable("date") String eventOpenBefore)
+			throws Exception {
+
+		try {
+
+			Collection<StudyEventDto> results =
+				this.
+					getOpenEventsBySubjectAndDate(
+						studySubjectID,
+						eventOpenBefore);
+
+			return
+				new ResponseEntity<Collection<StudyEventDto>>(
+					results,
+					HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.warn(
+				"SJM: Excepcion: "
+					+ e.getMessage(),
+				e);
+			throw e;
+		}
+	}
+
+	public Collection<StudyEventDto> getOpenEventsBySubjectAndDate(
+		int studySubjectID,
+		String eventOpenBefore)
 			throws Exception {
 
 		try {
@@ -114,9 +140,7 @@ public class StudySubjectEventResource {
 				"SJM: Saliendo getOpenEventsByStudySubjectAndDate");
 
 			return
-				new ResponseEntity<Collection<StudyEventDto>>(
-					results,
-					HttpStatus.OK);
+				results;
 		} catch (Exception e) {
 			LOGGER.warn(
 				"SJM: Excepcion: "
@@ -126,4 +150,3 @@ public class StudySubjectEventResource {
 		}
 	}
 }
-

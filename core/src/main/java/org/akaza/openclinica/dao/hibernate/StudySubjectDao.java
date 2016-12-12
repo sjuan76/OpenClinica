@@ -80,7 +80,25 @@ public class StudySubjectDao extends AbstractDomainDao<StudySubject> {
 			subjectUID);
 
 		return (List<StudySubject>) query.list();
-    }
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<StudySubject> getByStudyID(
+		int studyID) {
+
+		String hql =
+			" from StudySubject ss "
+				+ "where ss.study.studyId= :studyID";
+		Query query =
+			getCurrentSession().
+			createQuery(
+				hql);
+		query.setInteger(
+			"studyID",
+			studyID);
+
+		return (List<StudySubject>) query.list();
+	}
 
     public String getValidOid(StudySubject studySubject, ArrayList<String> oidList) {
     OidGenerator oidGenerator = new StudySubjectOidGenerator();

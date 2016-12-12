@@ -86,6 +86,7 @@
 </select>
 
 <select name='idPersona'>
+    <option value=""/>
     <c:forEach items="${pendingEvents.personas}" var="_persona">
 	<option value="${_persona.uid}">${_persona.uid}</option>
     </c:forEach>
