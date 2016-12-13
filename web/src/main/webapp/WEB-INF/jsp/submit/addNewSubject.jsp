@@ -115,26 +115,35 @@
 					 <c:otherwise>
 <script>
     function getAdministrativeData() {
-        alert("Función llamada");
         var studySubjectId = document.getElementById("studySubjectIdField").value;
-        alert("Study Subject ID " + studySubjectId);
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = function() {
-            if (xmlHttp.readyState == XMLHttprequest.DONE) {
-                alert("status es " + xmlHttp.status);
-                alert("response text es " + xmlHttp.responeText);
+            if (xmlHttp.readyState == XMLHttpRequest.DONE) {
+                var respuesta = JSON.parse(xmlHttp.responseText);
+                if (xmlHttp.status != 200) {
+                   alert("Error obtenint dades " + respuesta['mensajeError']);
+                   return;
+                }
+                if (respuesta['mensajeError'] !== null) {
+                   alert("Error: " + respuesta['mensajeError']);
+                   return;
+                }
+                document.getElementById('personIdentifierField').value = respuesta['dni'];
+                document.getElementById('secondaryLabelField').value = respuesta['nombreConjunto'];
+                document.getElementById('anyoNacimientoField').value  = respuesta['anyoNacimiento'];
+
+                if (respuesta['sexo'] !== null) {
+                   document.getElementById('genderField').value = respuesta['sexo'];
+                }
             }
         };
-        alert("Vamos a abrir");
-        xmlHttp.open("GET", "/ssibAdministrativeData/json/view/cipAut/" + studySubjectId, true)
-        alert("Vamos a enviar");
+        xmlHttp.open("GET", "/OpenClinica/pages/ssibData/json/view/cipAut/" + studySubjectId, true)
         xmlHttp.send();
-        alert("Enviado");
     }
 </script>
 					   <input id="studySubjectIdField" onfocus="this.select()" type="text" name="label" value="<c:out value="${label}"/>" size="50" class="formfieldXL">
     					<td>*
-	    				    <input type="button" value="Validar" onclick="getAdministrativeData()"/>
+	    				    <input type="button" value="Validar" onclick="getAdministrativeData()" class="button_medium"/>
 		    			</td>
 					 </c:otherwise>
 					</c:choose>
@@ -155,7 +164,7 @@
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td valign="top"><div class="formfieldXL_BG">
-						<input onfocus="this.select()" type="text" name="uniqueIdentifier" value="<c:out value="${uniqueIdentifier}"/>" size="50" class="formfieldXL">
+						<input id="personIdentifierField" onfocus="this.select()" type="text" name="uniqueIdentifier" value="<c:out value="${uniqueIdentifier}"/>" size="50" class="formfieldXL">
 					</div></td>
 					<td>*
 					    <c:if test="${study.studyParameterConfig.discrepancyManagement=='true'}"><a href="#" onClick="openDSNoteWindow('CreateDiscrepancyNote?name=subject&field=uniqueIdentifier&column=unique_identifier','spanAlert-uniqueIdentifier'); return false;">
@@ -177,7 +186,7 @@
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td valign="top"><div class="formfieldXL_BG">
-						<input onfocus="this.select()" type="text" name="uniqueIdentifier" value="<c:out value="${uniqueIdentifier}"/>" size="50" class="formfieldXL">
+						<input id="personIdentifierField" onfocus="this.select()" type="text" name="uniqueIdentifier" value="<c:out value="${uniqueIdentifier}"/>" size="50" class="formfieldXL">
 					</div></td>
 					<td>&nbsp;</td>
 				</tr>
@@ -189,7 +198,7 @@
 	</tr>
 	</c:when>
 	<c:otherwise>
-	  <input type="hidden" name="uniqueIdentifier" value="<c:out value="${uniqueIdentifier}"/>">
+	  <input id="personIndentifierField" type="hidden" name="uniqueIdentifier" value="<c:out value="${uniqueIdentifier}"/>">
 	</c:otherwise>
 	</c:choose>
 
@@ -199,7 +208,7 @@
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td valign="top"><div class="formfieldXL_BG">
-						<input onfocus="this.select()" type="text" name="secondaryLabel" value="<c:out value="${secondaryLabel}"/>" size="50" class="formfieldXL">
+						<input id="secondaryLabelField" onfocus="this.select()" type="text" name="secondaryLabel" value="<c:out value="${secondaryLabel}"/>" size="50" class="formfieldXL">
 					</div></td>
 					<td>&nbsp;</td>
 				</tr>
@@ -261,7 +270,7 @@
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td valign="top"><div class="formfieldS_BG">
-						<select name="gender" class="formfieldS">
+						<select id="genderField" name="gender" class="formfieldS">
 							<option value="">-<fmt:message key="select" bundle="${resword}"/>-</option>
 							<c:choose>
 								<c:when test="${!empty chosenGender}">
@@ -340,7 +349,7 @@
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td valign="top"><div class="formfieldM_BG">
-						<input onfocus="this.select()" type="text" name="yob" size="15" value="<c:out value="${yob}" />" class="formfieldM" />
+						<input id="anyoNacimientoField" onfocus="this.select()" type="text" name="yob" size="15" value="<c:out value="${yob}" />" class="formfieldM" />
 					</td>
 					<td>(<fmt:message key="date_format_year" bundle="${resformat}"/>) *<c:if test="${study.studyParameterConfig.discrepancyManagement=='true'}"><a href="#" onClick="openDSNoteWindow('CreateDiscrepancyNote?name=subject&field=yob&column=date_of_birth','spanAlert-yob'); return false;">
 					<img name="flag_yob" src="images/icon_noNote.gif" border="0" alt="<fmt:message key="discrepancy_note" bundle="${resword}"/>" title="<fmt:message key="discrepancy_note" bundle="${resword}"/>"></a></c:if></td>
