@@ -128,12 +128,22 @@
                    alert("Error: " + respuesta['mensajeError']);
                    return;
                 }
-                document.getElementById('personIdentifierField').value = respuesta['dni'];
-                document.getElementById('secondaryLabelField').value = respuesta['nombreConjunto'];
-                document.getElementById('anyoNacimientoField').value  = respuesta['anyoNacimiento'];
 
-                if (respuesta['sexo'] !== null) {
-                   document.getElementById('genderField').value = respuesta['sexo'];
+                var campo = document.getElementById('personIdentifierField');
+                if (campo !== null) {
+                    campo.value = respuesta['dni'];
+                }
+                campo = document.getElementById('secondaryLabelField');
+                if (campo !== null) {
+                    campo.value = respuesta['nombreConjunto'];
+                }
+                campo = document.getElementById('anyoNacimientoField');
+                if (campo !== null) {
+                    campo.value  = respuesta['anyoNacimiento'];
+                }
+                campo = document.getElementById('genderField');
+                if ((campo !== null) && (respuesta['sexo'] !== null)) {
+                   campo.value = respuesta['sexo'];
                 }
             }
         };

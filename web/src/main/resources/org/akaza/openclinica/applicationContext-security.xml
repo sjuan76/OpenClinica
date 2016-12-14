@@ -43,6 +43,7 @@
 
     <security:intercept-url pattern="/pages/personSubject/**" filters="none"/>
     <security:intercept-url pattern="/pages/studyEvent/**" filters="none"/>
+    <security:intercept-url pattern="/pages/ssibData/**" filters="none"/>
 
     <security:intercept-url pattern="/pages/auth/api/**" filters="none"/>
     <security:intercept-url pattern="/**" access="ROLE_USER" />
@@ -176,5 +177,6 @@
         <property name="studyEventDao" ref="studyEventDaoDomain"/>
     </bean>
 
+    <bean id="administrativeDataSsibResource" class="org.akaza.openclinica.web.restful_ssib.AdministrativeDataResource"/>
 
 </beans>
