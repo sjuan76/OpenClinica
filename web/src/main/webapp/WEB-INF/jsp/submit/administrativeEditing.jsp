@@ -103,8 +103,17 @@ margin-top:20px; updateTabs(<c:out value="${tabId}"/>);--%>
             <c:otherwise>
 
             </c:otherwise>
-        </c:choose></b>  &nbsp;&nbsp;</span> </h1> </td><td>
-		<h1><span class="title_manage"> <c:out value="${studySubject.label}" />&nbsp;&nbsp; </span></h1></td></tr></table>
+        </c:choose></b>  &nbsp;&nbsp;</span> </h1> </td>
+		<td>
+			<h1><span class="title_manage"> <c:out value="${studySubject.label}" />&nbsp;&nbsp; </span></h1>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<h2><span class="title_manage"><c:out value="${studySubject.secondaryLabel}"/></span></h2>
+		</td>
+	</tr>
+</table>
 <%--</div>--%>
 
 <form id="mainForm" name="crfForm" method="POST" action="AdministrativeEditing" onLoad="javascript:leftnavExpand('CRF_infobox_open');">

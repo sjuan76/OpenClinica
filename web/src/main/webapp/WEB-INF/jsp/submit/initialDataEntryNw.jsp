@@ -108,8 +108,17 @@
             <c:otherwise>
 
             </c:otherwise>
-        </c:choose></b>  &nbsp;&nbsp;</span> </h1> </td><td>
-		<h1><span class="title_manage"> <c:out value="${studySubject.label}" />&nbsp;&nbsp; </span></h1></td></tr></table>
+        </c:choose></b>  &nbsp;&nbsp;</span> </h1></td>
+		<td>
+			<h1><span class="title_manage"><c:out value="${studySubject.label}" /></span></h1>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<h2><span class="title_manage"><c:out value="${studySubject.secondaryLabel}"/></span></h1>
+		</td>
+	</tr>
+</table>
 <%--the tabId default value is set in DataEntryServlet.getInputBeans()--%>
 
 
